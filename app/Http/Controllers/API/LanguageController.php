@@ -45,7 +45,7 @@ class LanguageController extends Controller
         try {
             $language = Language::findOrFail($id);
             return response($language);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return response(null, Response::HTTP_NO_CONTENT);
         }
     }
@@ -63,7 +63,7 @@ class LanguageController extends Controller
             $language = Language::findOrFail($id);
             $language->fill($request->validated())->save();
             return response(null);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return response(Message::FAILED_UPDATE, Response::HTTP_NOT_FOUND);
         }
     }
@@ -81,7 +81,7 @@ class LanguageController extends Controller
             Language::destroy($id);
             $language->products()->update(['language_id' => null]);
             return response(null);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return response(Message::FAILED_DELETED, Response::HTTP_NOT_FOUND);
         }
     }

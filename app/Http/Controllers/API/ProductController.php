@@ -46,7 +46,7 @@ class ProductController extends Controller
         try {
             $category = Product::findOrFail($id);
             return response($category);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return response(null, Response::HTTP_NO_CONTENT);
         }
     }
@@ -64,7 +64,7 @@ class ProductController extends Controller
             $product = Product::findOrFail($id);
             $product->fill($request->validated())->save();
             return response(null);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return response(Message::FAILED_UPDATE, Response::HTTP_NOT_FOUND);
         }
     }

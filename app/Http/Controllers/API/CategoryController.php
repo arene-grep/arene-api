@@ -45,7 +45,7 @@ class CategoryController extends Controller
         try {
             $category = Category::findOrFail($id);
             return response($category);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return response(null, Response::HTTP_NO_CONTENT);
         }
     }
@@ -63,7 +63,7 @@ class CategoryController extends Controller
             $category = Category::findOrFail($id);
             $category->fill($request->validated())->save();
             return response(null);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return response(Message::FAILED_UPDATE, Response::HTTP_NOT_FOUND);
         }
     }
@@ -81,7 +81,7 @@ class CategoryController extends Controller
             Category::destroy($id);
             $category->products()->update(['category_id' => null]);
             return response(null);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return response(Message::FAILED_DELETED, Response::HTTP_NOT_FOUND);
         }
     }
