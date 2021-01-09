@@ -45,7 +45,7 @@ class TradingCardGameController extends Controller
         try {
             $trading_card_game = TradingCardGame::findOrFail($id);
             return response($trading_card_game);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return response(null, Response::HTTP_NO_CONTENT);
         }
     }
@@ -63,7 +63,7 @@ class TradingCardGameController extends Controller
             $trading_card_game = TradingCardGame::findOrFail($id);
             $trading_card_game->fill($request->validated())->save();
             return response(null);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return response(Message::FAILED_UPDATE, Response::HTTP_NOT_FOUND);
         }
     }
@@ -81,7 +81,7 @@ class TradingCardGameController extends Controller
             TradingCardGame::destroy($id);
             $trading_card_game->products()->update(['trading_card_game_id' => null]);
             return response(null);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return response(Message::FAILED_DELETED, Response::HTTP_NOT_FOUND);
         }
     }
