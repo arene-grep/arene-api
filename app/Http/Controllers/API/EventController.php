@@ -4,7 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Exceptions\Message;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SaveEventRequest;
+use App\Http\Requests\UpdateEventRequest;
+use App\Http\Requests\StoreEventRequest;
 use App\Models\Event;
 use Exception;
 use Illuminate\Http\Response;
@@ -24,10 +25,10 @@ class EventController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param SaveEventRequest $request
+     * @param StoreEventRequest $request
      * @return Response
      */
-    public function store(SaveEventRequest $request)
+    public function store(StoreEventRequest $request)
     {
         $event = new Event();
         $event->fill($request->validated())->save();
@@ -53,11 +54,11 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param SaveEventRequest $request
+     * @param UpdateEventRequest $request
      * @param int $id
      * @return Response
      */
-    public function update(SaveEventRequest $request, int $id)
+    public function update(UpdateEventRequest $request, int $id)
     {
         try {
             $category = Event::findOrFail($id);
