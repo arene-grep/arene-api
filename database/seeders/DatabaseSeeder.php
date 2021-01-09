@@ -15,10 +15,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             LanguageSeeder::class,
-            EventSeeder::class,
             TradingCardGameSeeder::class,
+            EventSeeder::class,
             CategorySeeder::class,
             ProductSeeder::class,
         ]);
+
     }
 }

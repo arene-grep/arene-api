@@ -16,10 +16,7 @@ class Event extends Model
 
     protected $fillable = [
         'name',
-        'price',
-        'stock',
-        'minimum_stock',
-        'category_id',
+        'date',
         'trading_card_game_id',
     ];
 
