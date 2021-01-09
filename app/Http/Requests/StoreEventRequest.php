@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveEventRequest extends FormRequest
+class StoreEventRequest extends FormRequest
 {
     /**
      *Determine if the event is authorized to make this request
@@ -25,7 +25,9 @@ class SaveEventRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required'
+            'name' => 'required',
+            'date' => 'required',
+            'trading_card_game_id' => 'exists:trading_card_games,id',
         ];
     }
 
