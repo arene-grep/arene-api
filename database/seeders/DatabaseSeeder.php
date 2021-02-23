@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             EventSeeder::class,
             CategorySeeder::class,
             ProductSeeder::class,
+            UserSeeder::class,
+            OrderSeeder::class
         ]);
 
     }
