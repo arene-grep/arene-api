@@ -17,7 +17,7 @@ class EventController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return response(Event::all(), Response::HTTP_OK);
     }
@@ -28,7 +28,7 @@ class EventController extends Controller
      * @param StoreEventRequest $request
      * @return Response
      */
-    public function store(StoreEventRequest $request)
+    public function store(StoreEventRequest $request): Response
     {
         $event = new Event();
         $event->fill($request->validated())->save();
@@ -41,7 +41,7 @@ class EventController extends Controller
      * @param int $id
      * @return Response
      */
-    public function show(int $id)
+    public function show(int $id): Response
     {
         try {
             $category = Event::findOrFail($id);
@@ -58,7 +58,7 @@ class EventController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(UpdateEventRequest $request, int $id)
+    public function update(UpdateEventRequest $request, int $id): Response
     {
         try {
             $category = Event::findOrFail($id);
@@ -75,7 +75,7 @@ class EventController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id): Response
     {
         //TODO remove from event_user too
         if (Event::destroy($id))

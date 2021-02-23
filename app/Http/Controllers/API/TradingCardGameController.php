@@ -16,7 +16,7 @@ class TradingCardGameController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return response(TradingCardGame::all());
     }
@@ -27,7 +27,7 @@ class TradingCardGameController extends Controller
      * @param SaveTradingCardGameRequest $request
      * @return Response
      */
-    public function store(SaveTradingCardGameRequest $request)
+    public function store(SaveTradingCardGameRequest $request): Response
     {
         $trading_card_game = new TradingCardGame();
         $trading_card_game->fill($request->validated())->save();
@@ -40,7 +40,7 @@ class TradingCardGameController extends Controller
      * @param int $id
      * @return Response
      */
-    public function show(int $id)
+    public function show(int $id): Response
     {
         try {
             $trading_card_game = TradingCardGame::findOrFail($id);
@@ -57,7 +57,7 @@ class TradingCardGameController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(SaveTradingCardGameRequest $request, int $id)
+    public function update(SaveTradingCardGameRequest $request, int $id): Response
     {
         try {
             $trading_card_game = TradingCardGame::findOrFail($id);
@@ -74,7 +74,7 @@ class TradingCardGameController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id): Response
     {
         try {
             $trading_card_game = TradingCardGame::findOrFail($id);

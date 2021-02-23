@@ -17,7 +17,7 @@ class ProductController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return response(Product::all());
     }
@@ -28,7 +28,7 @@ class ProductController extends Controller
      * @param StoreProductRequest $request
      * @return Response
      */
-    public function store(StoreProductRequest $request)
+    public function store(StoreProductRequest $request): Response
     {
         $product = new Product();
         $product->fill($request->validated())->save();
@@ -41,7 +41,7 @@ class ProductController extends Controller
      * @param int $id
      * @return Response
      */
-    public function show(int $id)
+    public function show(int $id): Response
     {
         try {
             $category = Product::findOrFail($id);
@@ -58,7 +58,7 @@ class ProductController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(UpdateProductRequest $request, int $id)
+    public function update(UpdateProductRequest $request, int $id): Response
     {
         try {
             $product = Product::findOrFail($id);
@@ -75,7 +75,7 @@ class ProductController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id): Response
     {
         if (Product::destroy($id))
             return response(null);

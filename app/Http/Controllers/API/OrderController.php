@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Exceptions\Message;
 use App\Http\Requests\SaveOrderRequest;
 use App\Models\Order;
@@ -15,7 +16,7 @@ class OrderController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return response(Order::all());
     }
@@ -26,7 +27,7 @@ class OrderController extends Controller
      * @param SaveOrderRequest $request
      * @return Response
      */
-    public function store(SaveOrderRequest $request)
+    public function store(SaveOrderRequest $request): Response
     {
         $order = new Order();
         $order->fill($request->validated())->save();
@@ -39,7 +40,7 @@ class OrderController extends Controller
      * @param int $id
      * @return Response
      */
-    public function show(int $id)
+    public function show(int $id): Response
     {
         try {
             $order = Order::findOrFail($id);
@@ -56,7 +57,7 @@ class OrderController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(SaveOrderRequest $request, int $id)
+    public function update(SaveOrderRequest $request, int $id): Response
     {
         try {
             $order = Order::findOrFail($id);
@@ -73,7 +74,7 @@ class OrderController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id): Response
     {
         if (Order::destroy($id))
             return response(null);

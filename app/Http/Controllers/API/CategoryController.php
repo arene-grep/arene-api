@@ -16,7 +16,7 @@ class CategoryController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return response(Category::all());
     }
@@ -27,7 +27,7 @@ class CategoryController extends Controller
      * @param SaveCategoryRequest $request
      * @return Response
      */
-    public function store(SaveCategoryRequest $request)
+    public function store(SaveCategoryRequest $request): Response
     {
         $category = new Category();
         $category->fill($request->validated())->save();
@@ -40,7 +40,7 @@ class CategoryController extends Controller
      * @param int $id
      * @return Response
      */
-    public function show(int $id)
+    public function show(int $id): Response
     {
         try {
             $category = Category::findOrFail($id);
@@ -57,7 +57,7 @@ class CategoryController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(SaveCategoryRequest $request, int $id)
+    public function update(SaveCategoryRequest $request, int $id): Response
     {
         try {
             $category = Category::findOrFail($id);
@@ -74,7 +74,7 @@ class CategoryController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id): Response
     {
         try {
             $category = Category::findOrFail($id);

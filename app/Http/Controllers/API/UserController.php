@@ -16,7 +16,7 @@ class UserController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return response(User::all());
     }
@@ -27,7 +27,7 @@ class UserController extends Controller
      * @param SaveUserRequest $request
      * @return Response
      */
-    public function store(SaveUserRequest $request)
+    public function store(SaveUserRequest $request): Response
     {
         $user = new User();
         $user->fill($request->validated())->save();
@@ -40,7 +40,7 @@ class UserController extends Controller
      * @param int $id
      * @return Response
      */
-    public function show(int $id)
+    public function show(int $id): Response
     {
         try {
             $user = User::findOrFail($id);
@@ -57,7 +57,7 @@ class UserController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(SaveUserRequest $request, int $id)
+    public function update(SaveUserRequest $request, int $id): Response
     {
         try {
             $user = User::findOrFail($id);
@@ -74,7 +74,7 @@ class UserController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id): Response
     {
         if (User::destroy($id))
             return response(null);

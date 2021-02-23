@@ -16,7 +16,7 @@ class LanguageController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return response(Language::all());
     }
@@ -27,7 +27,7 @@ class LanguageController extends Controller
      * @param SaveLanguageRequest $request
      * @return Response
      */
-    public function store(SaveLanguageRequest $request)
+    public function store(SaveLanguageRequest $request): Response
     {
         $language = new Language();
         $language->fill($request->validated())->save();
@@ -40,7 +40,7 @@ class LanguageController extends Controller
      * @param int $id
      * @return Response
      */
-    public function show(int $id)
+    public function show(int $id): Response
     {
         try {
             $language = Language::findOrFail($id);
@@ -57,7 +57,7 @@ class LanguageController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(SaveLanguageRequest $request, int $id)
+    public function update(SaveLanguageRequest $request, int $id): Response
     {
         try {
             $language = Language::findOrFail($id);
@@ -74,7 +74,7 @@ class LanguageController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id): Response
     {
         try {
             $language = Language::findOrFail($id);
