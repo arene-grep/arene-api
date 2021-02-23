@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveOrderRequest extends FormRequest
+class UpdateOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class SaveOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'date' => 'required|date',
-            'user_id' => 'exists:users,id',
+            'date' => 'required|date'
         ];
     }
 }

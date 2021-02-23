@@ -4,7 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Exceptions\Message;
-use App\Http\Requests\SaveOrderRequest;
+use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use Illuminate\Http\Response;
 use Exception;
@@ -24,10 +25,10 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param SaveOrderRequest $request
+     * @param StoreOrderRequest $request
      * @return Response
      */
-    public function store(SaveOrderRequest $request): Response
+    public function store(StoreOrderRequest $request): Response
     {
         $order = new Order();
         $order->fill($request->validated())->save();
@@ -53,11 +54,11 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param SaveOrderRequest $request
+     * @param UpdateOrderRequest $request
      * @param int $id
      * @return Response
      */
-    public function update(SaveOrderRequest $request, int $id): Response
+    public function update(UpdateOrderRequest $request, int $id): Response
     {
         try {
             $order = Order::findOrFail($id);
