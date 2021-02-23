@@ -6,6 +6,7 @@ use App\Http\Controllers\API\LanguageController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\TradingCardGameController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,5 +32,6 @@ Route::apiResources([
     'languages' => LanguageController::class,
     'events' => EventController::class,
     'users' => UserController::class,
+    'orders' => OrderController::class,
 ]);
 
