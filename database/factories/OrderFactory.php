@@ -22,7 +22,8 @@ class OrderFactory extends Factory
     public function definition()
     {
         return [
-            'date' => $this->faker->date()
+            'date' => $this->faker->date(),
+            'user_id' => null
         ];
     }
 }

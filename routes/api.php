@@ -3,10 +3,10 @@
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\LanguageController;
+use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\TradingCardGameController;
 use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

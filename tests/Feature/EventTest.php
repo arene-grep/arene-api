@@ -110,9 +110,6 @@ class EventTest extends TestCase
     /** @test */
     public function updateEventUserHappyPath()
     {
-        //uncomment this to check the error if it returns 500
-        //$this->handleValidationExceptions();
-
         $oldDate = new DateTime('NOW');
         $oldDate->add(new DateInterval('P1D'));
 
