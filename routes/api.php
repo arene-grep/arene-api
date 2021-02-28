@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\BuyController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\LanguageController;
