@@ -34,6 +34,6 @@ class CreateBuysTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('buy');
+        Schema::dropIfExists('buys');
     }
 }

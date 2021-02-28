@@ -30,9 +30,9 @@ class BuyController extends Controller
      */
     public function store(StoreBuyRequest $request): Response
     {
-        $Buy = new Buy();
-        $Buy->fill($request->validated())->save();
-        return response($Buy, Response::HTTP_CREATED);
+        $buy = new Buy();
+        $buy->fill($request->validated())->save();
+        return response($buy, Response::HTTP_CREATED);
     }
 
     /**
@@ -44,8 +44,8 @@ class BuyController extends Controller
     public function show(int $id): Response
     {
         try {
-            $Buy = Buy::findOrFail($id);
-            return response($Buy);
+            $buy = Buy::findOrFail($id);
+            return response($buy);
         } catch (Exception) {
             return response(null, Response::HTTP_NO_CONTENT);
         }
@@ -61,8 +61,8 @@ class BuyController extends Controller
     public function update(UpdateBuyRequest $request, int $id): Response
     {
         try {
-            $Buy = Buy::findOrFail($id);
-            $Buy->fill($request->validated())->save();
+            $buy = Buy::findOrFail($id);
+            $buy->fill($request->validated())->save();
             return response(null);
         } catch (Exception) {
             return response(Message::FAILED_UPDATE, Response::HTTP_NOT_FOUND);

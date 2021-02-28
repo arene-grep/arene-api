@@ -24,7 +24,9 @@ class UpdateBuyRequest extends FormRequest
     public function rules()
     {
         return [
-            'quantity' => 'required|quantity'
+            'quantity' => 'required|integer',
+            'order_id' =>'exists:orders,id',
+            'product_id' =>'exists:products,id'
         ];
     }
 }
