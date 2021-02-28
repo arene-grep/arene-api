@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index(): Response
     {
-        return response(Product::all());
+        return response(Product::filter()->get());
     }
 
     /**
