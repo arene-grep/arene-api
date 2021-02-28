@@ -32,7 +32,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         'orders' => OrderController::class,
         'buys' => BuyController::class,
     ]);
+
+    Route::post('/logout', [UserController::class, 'logout']);
 });
+
+Route::get('/products', [ProductController::class,'index']);
+Route::get('/categories', [CategoryController::class,'index']);
+Route::get('/tcgames', [TradingCardGameController::class,'index']);
+Route::get('/languages', [LanguageController::class,'index']);
+Route::get('/events', [EventController::class,'index']);
 
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);

@@ -22,7 +22,7 @@ class UserController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
 
-        return response('User successfully created!', Response::HTTP_CREATED);
+        return response(Message::SUCCESSFUL_REGISTER, Response::HTTP_CREATED);
     }
 
     public function login(Request $request)
@@ -30,13 +30,19 @@ class UserController extends Controller
         $credentials = request(['email', 'password']);
 
         if (!Auth::attempt($credentials))
-            return response('Incorrect username or password', Response::HTTP_UNAUTHORIZED);
+            return response(Message::FAILED_LOGIN, Response::HTTP_UNAUTHORIZED);
 
         $user = User::where('email', $request->email)->first();
 
         $tokenResult = $user->createToken('authToken')->plainTextToken;
 
         return response(['token' => $tokenResult]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return response(Message::SUCCESSFUL_LOGOUT);
     }
 
     /**
