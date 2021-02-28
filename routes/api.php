@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\BuyController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\LanguageController;
@@ -7,7 +8,6 @@ use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\TradingCardGameController;
 use App\Http\Controllers\API\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,18 +21,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::apiResources([
+        'products' => ProductController::class,
+        'categories' => CategoryController::class,
+        'tcgames' => TradingCardGameController::class,
+        'languages' => LanguageController::class,
+        'events' => EventController::class,
+        'users' => UserController::class,
+        'orders' => OrderController::class,
+        'buys' => BuyController::class,
+    ]);
 });
 
-Route::apiResources([
-    'products' => ProductController::class,
-    'categories' => CategoryController::class,
-    'tcgames' => TradingCardGameController::class,
-    'languages' => LanguageController::class,
-    'events' => EventController::class,
-    'users' => UserController::class,
-    'orders' => OrderController::class,
-    'buys' => BuyController::class,
-]);
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/register', [UserController::class, 'register']);
+
+
+
 

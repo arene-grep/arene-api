@@ -6,11 +6,39 @@ use App\Exceptions\Message;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SaveUserRequest;
 use App\Models\User;
+use Auth;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
+    public function register(Request $request)
+    {
+        $user = new User();
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return response('User successfully created!', Response::HTTP_CREATED);
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = request(['email', 'password']);
+
+        if (!Auth::attempt($credentials))
+            return response('Incorrect username or password', Response::HTTP_UNAUTHORIZED);
+
+        $user = User::where('email', $request->email)->first();
+
+        $tokenResult = $user->createToken('authToken')->plainTextToken;
+
+        return response(['token' => $tokenResult]);
+    }
+
     /**
      * Display a listing of the resource.
      *
