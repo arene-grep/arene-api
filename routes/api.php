@@ -33,5 +33,6 @@ Route::apiResources([
     'events' => EventController::class,
     'users' => UserController::class,
     'orders' => OrderController::class,
+    'buys' => BuyController::class,
 ]);
 

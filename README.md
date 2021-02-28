@@ -1,4 +1,4 @@
-# Installation et Configuration
+php# Installation et Configuration
 
 ## Prérequis 
 * [PHP](https://www.php.net/downloads.php)
@@ -6,6 +6,7 @@
 * [Mysql](https://dev.mysql.com/downloads/installer/)
 
 #### Paquets natifs de PHP
+
 Laravel utilise quelques paquets de PHP qui ne sont pas activés automatiquement quand PHP est installé, donc il faut les activer. 
 Il faut aller où PHP a été installé (probablement *C:/php/*) et chercher le fichier **php.ini**.
 
