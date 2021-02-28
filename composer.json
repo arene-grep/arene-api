@@ -8,14 +8,14 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "8.0",
+        "php": "^8.0",
+        "ext-json": "*",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
-        "ext-json": "*",
-      "ext-http": "*"
+        "mehradsadeghi/laravel-filter-querystring": "dev-master"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",

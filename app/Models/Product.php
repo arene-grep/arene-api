@@ -5,14 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Mehradsadeghi\FilterQueryString\FilterQueryString;
 
 /**
  * @mixin IdeHelperProduct
+ * @method static filter()
  */
 class Product extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use FilterQueryString;
+
+    protected $filters = ['name', 'price', 'category_id', 'trading_card_game_id', 'language_id'];
 
     protected $fillable = [
         'name',
