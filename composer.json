@@ -68,7 +68,7 @@
         ],
         "setupdb": [
             "php artisan db:create",
-            "php artisan migrate:fresh --seed"
+            "php artisan migrate:fresh"
         ],
         "ide_helper": [
             "php artisan ide-helper:generate",
