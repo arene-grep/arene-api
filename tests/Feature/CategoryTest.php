@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Exceptions\Message;
+use App\Helpers\ApiHeaders;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,7 +14,6 @@ use Tests\TestCase;
 class CategoryTest extends TestCase
 {
     const URL = '/api/categories/';
-    const HEADERS = ['Accept' => 'application/json'];
 
     use RefreshDatabase;
     use WithFaker;
@@ -21,7 +21,7 @@ class CategoryTest extends TestCase
     /** @test */
     public function indexHappyPath()
     {
-        $response = $this->get(CategoryTest::URL, CategoryTest::HEADERS);
+        $response = $this->get(CategoryTest::URL, ApiHeaders::getGuest());
         $response->assertOk();
         $response->assertJson(Category::all()->toArray());
     }
@@ -30,7 +30,7 @@ class CategoryTest extends TestCase
     public function showHappyPath()
     {
         $category = Category::factory()->create();
-        $response = $this->get(CategoryTest::URL . $category->id, CategoryTest::HEADERS);
+        $response = $this->get(CategoryTest::URL . $category->id, ApiHeaders::getGuest());
         $response->assertSimilarJson($category->toArray());
         $response->assertOk();
     }
@@ -40,7 +40,7 @@ class CategoryTest extends TestCase
     {
         $category = Category::factory()->create();
         $wrongId = $category->id + 1;
-        $response = $this->get(CategoryTest::URL . $wrongId, CategoryTest::HEADERS);
+        $response = $this->get(CategoryTest::URL . $wrongId, ApiHeaders::getAuth());
         $this->assertEquals(null, $response->getContent());
         $response->assertNoContent();
     }
@@ -48,9 +48,10 @@ class CategoryTest extends TestCase
     /** @test */
     public function storeCategoryHappyPath()
     {
-        $response = $this->post(CategoryTest::URL,
+        $headers = ApiHeaders::getAuth();
+        $response = $this->postJson(CategoryTest::URL,
             ['name' => $this->faker->name],
-            CategoryTest::HEADERS
+            $headers
         );
 
         $response->assertCreated();
@@ -62,7 +63,7 @@ class CategoryTest extends TestCase
     {
         $response = $this->post(CategoryTest::URL,
             ['name' => ''],
-            CategoryTest::HEADERS
+            ApiHeaders::getAuth()
         );
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -79,7 +80,7 @@ class CategoryTest extends TestCase
         $expected_name = 'new category';
         $response = $this->put(CategoryTest::URL . $category->id,
             ['name' => $expected_name],
-            CategoryTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_category = Category::find($category->id);
 
@@ -97,7 +98,7 @@ class CategoryTest extends TestCase
         $category_id = $category->id + 1;
         $response = $this->put(CategoryTest::URL . $category_id,
             ['name' => $expected_name],
-            CategoryTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_category = Category::find($category->id);
         $response->assertNotFound();
@@ -113,7 +114,7 @@ class CategoryTest extends TestCase
         ]);
         $response = $this->put(CategoryTest::URL . $category->id,
             ['name' => ''],
-            CategoryTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_category = Category::find($category->id);
         $this->assertEquals($actual_category->toArray(), $category->toArray());
@@ -130,7 +131,7 @@ class CategoryTest extends TestCase
         $product->category()->associate($category)->save();
         $response = $this->delete(CategoryTest::URL . $category->id,
             [],
-            CategoryTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $products = Product::where(['category_id' => $category->id])->get();
 
@@ -146,7 +147,7 @@ class CategoryTest extends TestCase
         $category_id = $category->id + 1;
         $response = $this->delete(CategoryTest::URL . $category_id,
             [],
-            CategoryTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $this->assertNotNull(Category::find($category->id));
         $response->assertNotFound();
