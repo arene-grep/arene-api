@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Exceptions\Message;
+use App\Helpers\ApiHeaders;
 use App\Models\Order;
 use App\Models\User;
 use DateInterval;
@@ -15,7 +16,6 @@ use Tests\TestCase;
 class OrderTest extends TestCase
 {
     const URL = '/api/orders/';
-    const HEADERS = ['Accept' => 'application/json'];
 
     use RefreshDatabase;
     use WithFaker;
@@ -23,7 +23,7 @@ class OrderTest extends TestCase
     /** @test */
     public function indexEmptyHappyPath()
     {
-        $response = $this->get(OrderTest::URL, OrderTest::HEADERS);
+        $response = $this->get(OrderTest::URL, ApiHeaders::getGuest());
         $response->assertOk();
         $response->assertJson(Order::all()->toArray());
     }
@@ -35,7 +35,7 @@ class OrderTest extends TestCase
     {
         $this->withoutExceptionHandling();
         Order::factory()->count(5)->create();
-        $response = $this->get(OrderTest::URL, OrderTest::HEADERS);
+        $response = $this->get(OrderTest::URL, ApiHeaders::getGuest());
         $response->assertOk();
         $response->assertJson(Order::all()->toArray());
     }
@@ -44,7 +44,7 @@ class OrderTest extends TestCase
     public function showHappyPath()
     {
         $order = Order::factory()->create();
-        $response = $this->get(OrderTest::URL . $order->id, OrderTest::HEADERS);
+        $response = $this->get(OrderTest::URL . $order->id, ApiHeaders::getGuest());
         $response->assertSimilarJson($order->toArray());
         $response->assertOk();
     }
@@ -54,7 +54,7 @@ class OrderTest extends TestCase
     {
         $order = Order::factory()->create();
         $wrongId = $order->id + 1;
-        $response = $this->get(OrderTest::URL . $wrongId, OrderTest::HEADERS);
+        $response = $this->get(OrderTest::URL . $wrongId, ApiHeaders::getGuest());
         $this->assertEquals(null, $response->getContent());
         $response->assertNoContent();
     }
@@ -68,7 +68,7 @@ class OrderTest extends TestCase
                 'date' => $this->faker->dateTime,
                 'user_id' => $user->id
             ],
-            OrderTest::HEADERS
+            ApiHeaders::getAuth()
         );
 
         $response->assertCreated();
@@ -83,7 +83,7 @@ class OrderTest extends TestCase
             [
                 'user_id' => $user->id
             ],
-            OrderTest::HEADERS
+            ApiHeaders::getAuth()
         );
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -106,7 +106,7 @@ class OrderTest extends TestCase
             [
                 'date' => $expected_date
             ],
-            OrderTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_order = Order::find($order->id);
 
@@ -125,7 +125,7 @@ class OrderTest extends TestCase
         $expected_date = $now->add(new DateInterval('P1D'));
         $response = $this->put(OrderTest::URL . $order_id,
             ['date' => $expected_date],
-            OrderTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_order = Order::find($order->id);
         $response->assertNotFound();
@@ -147,7 +147,7 @@ class OrderTest extends TestCase
         $user2 = User::factory()->create();
         $response = $this->put(OrderTest::URL . $order->id,
             ['user_id' => $user2->id],
-            OrderTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_order = Order::find($order->id);
         $this->assertEquals($order->user_id, $actual_order->user_id);
@@ -162,7 +162,7 @@ class OrderTest extends TestCase
         $order = Order::factory()->create();
         $response = $this->delete(OrderTest::URL . $order->id,
             [],
-            OrderTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $this->assertNull(Order::find($order->id));
         $response->assertOk();
@@ -175,7 +175,7 @@ class OrderTest extends TestCase
         $order_id = $order->id + 1;
         $response = $this->delete(OrderTest::URL . $order_id,
             [],
-            OrderTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $this->assertNotNull(Order::find($order->id));
         $response->assertNotFound();

@@ -35,6 +35,12 @@ Route::get('/languages/{id}', [LanguageController::class, 'show']);
 Route::get('/events', [EventController::class, 'index']);
 Route::get('/events/{id}', [EventController::class, 'show']);
 
+Route::get('/orders', [OrderController::class, 'index']);
+Route::get('/orders/{id}', [OrderController::class, 'show']);
+
+Route::get('/buys', [BuyController::class, 'index']);
+Route::get('/buys/{id}', [BuyController::class, 'show']);
+
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
 

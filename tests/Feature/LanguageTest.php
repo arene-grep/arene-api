@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Exceptions\Message;
+use App\Helpers\ApiHeaders;
 use App\Models\Language;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,7 +14,6 @@ use Tests\TestCase;
 class LanguageTest extends TestCase
 {
     const URL = '/api/languages/';
-    const HEADERS = ['Accept' => 'application/json'];
 
     use RefreshDatabase;
     use WithFaker;
@@ -21,7 +21,7 @@ class LanguageTest extends TestCase
     /** @test */
     public function indexHappyPath()
     {
-        $response = $this->get(LanguageTest::URL, LanguageTest::HEADERS);
+        $response = $this->get(LanguageTest::URL, ApiHeaders::getGuest());
         $response->assertOk();
         $response->assertJson(Language::all()->toArray());
     }
@@ -30,7 +30,7 @@ class LanguageTest extends TestCase
     public function showHappyPath()
     {
         $language = Language::factory()->create();
-        $response = $this->get(LanguageTest::URL . $language->id, LanguageTest::HEADERS);
+        $response = $this->get(LanguageTest::URL . $language->id, ApiHeaders::getGuest());
         $response->assertSimilarJson($language->toArray());
         $response->assertOk();
     }
@@ -40,7 +40,7 @@ class LanguageTest extends TestCase
     {
         $language = Language::factory()->create();
         $wrongId = $language->id + 1;
-        $response = $this->get(LanguageTest::URL . $wrongId, LanguageTest::HEADERS);
+        $response = $this->get(LanguageTest::URL . $wrongId, ApiHeaders::getGuest());
         $this->assertEquals(null, $response->getContent());
         $response->assertNoContent();
     }
@@ -50,7 +50,7 @@ class LanguageTest extends TestCase
     {
         $response = $this->post(LanguageTest::URL,
             ['name' => $this->faker->name],
-            LanguageTest::HEADERS
+            ApiHeaders::getAuth()
         );
 
         $response->assertCreated();
@@ -62,7 +62,7 @@ class LanguageTest extends TestCase
     {
         $response = $this->post(LanguageTest::URL,
             ['name' => ''],
-            LanguageTest::HEADERS
+            ApiHeaders::getAuth()
         );
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -79,7 +79,7 @@ class LanguageTest extends TestCase
         $expected_name = 'new language';
         $response = $this->put(LanguageTest::URL . $language->id,
             ['name' => $expected_name],
-            LanguageTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_language = Language::find($language->id);
 
@@ -97,7 +97,7 @@ class LanguageTest extends TestCase
         $language_id = $language->id + 1;
         $response = $this->put(LanguageTest::URL . $language_id,
             ['name' => $expected_name],
-            LanguageTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_language = Language::find($language->id);
         $response->assertNotFound();
@@ -113,7 +113,7 @@ class LanguageTest extends TestCase
         ]);
         $response = $this->put(LanguageTest::URL . $language->id,
             ['name' => ''],
-            LanguageTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_language = Language::find($language->id);
         $this->assertEquals($actual_language->toArray(), $language->toArray());
@@ -130,7 +130,7 @@ class LanguageTest extends TestCase
         $product->language()->associate($language)->save();
         $response = $this->delete(LanguageTest::URL . $language->id,
             [],
-            LanguageTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $products = Product::where(['language_id' => $language->id])->get();
 
@@ -146,7 +146,7 @@ class LanguageTest extends TestCase
         $language_id = $language->id + 1;
         $response = $this->delete(LanguageTest::URL . $language_id,
             [],
-            LanguageTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $this->assertNotNull(Language::find($language->id));
         $response->assertNotFound();

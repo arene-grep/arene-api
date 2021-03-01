@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Exceptions\Message;
+use App\Helpers\ApiHeaders;
 use App\Models\Category;
 use App\Models\Language;
 use App\Models\Product;
@@ -15,7 +16,6 @@ use Tests\TestCase;
 class ProductTest extends TestCase
 {
     const URL = '/api/products/';
-    const HEADERS = ['Accept' => 'application/json'];
 
     use RefreshDatabase;
     use WithFaker;
@@ -23,7 +23,7 @@ class ProductTest extends TestCase
     /** @test */
     public function indexHappyPath()
     {
-        $response = $this->get(ProductTest::URL, ProductTest::HEADERS);
+        $response = $this->get(ProductTest::URL, ApiHeaders::getGuest());
         $response->assertOk();
         $response->assertJson(Product::all()->toArray());
     }
@@ -32,7 +32,7 @@ class ProductTest extends TestCase
     public function showHappyPath()
     {
         $product = Product::factory()->create();
-        $response = $this->get(ProductTest::URL . $product->id, ProductTest::HEADERS);
+        $response = $this->get(ProductTest::URL . $product->id, ApiHeaders::getGuest());
         $response->assertSimilarJson($product->toArray());
         $response->assertOk();
     }
@@ -42,7 +42,7 @@ class ProductTest extends TestCase
     {
         $product = Product::factory()->create();
         $wrongId = $product->id + 1;
-        $response = $this->get(ProductTest::URL . $wrongId, ProductTest::HEADERS);
+        $response = $this->get(ProductTest::URL . $wrongId, ApiHeaders::getGuest());
         $this->assertEmpty($response->getContent());
         $response->assertNoContent();
     }
@@ -55,7 +55,7 @@ class ProductTest extends TestCase
             'price' => $this->faker->randomFloat(2, 0, 99),
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->randomNumber(3)
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertCreated();
         $this->assertCount(1, Product::all());
@@ -69,7 +69,7 @@ class ProductTest extends TestCase
             'price' => $this->faker->randomFloat(2, 0, 99),
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->randomNumber(3)
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertSeeText('name');
@@ -83,7 +83,7 @@ class ProductTest extends TestCase
             'price' => $this->faker->randomFloat(2, 0, 99),
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->randomNumber(3)
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -99,7 +99,7 @@ class ProductTest extends TestCase
             'price' => null,
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->randomNumber(3)
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertSeeText('price');
@@ -114,7 +114,7 @@ class ProductTest extends TestCase
             'price' => $this->faker->word,
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->randomNumber(3)
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertSeeText('price');
@@ -128,7 +128,7 @@ class ProductTest extends TestCase
             'name' => $this->faker->word,
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->randomNumber(3)
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertSeeText('price');
@@ -142,7 +142,7 @@ class ProductTest extends TestCase
             'name' => $this->faker->word,
             'price' => $this->faker->randomFloat(2, 0, 99),
             'minimum_stock' => $this->faker->randomNumber(3)
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertCreated();
         $this->assertCount(1, Product::all());
@@ -156,7 +156,7 @@ class ProductTest extends TestCase
             'price' => $this->faker->randomFloat(2, 0, 99),
             'stock' => $this->faker->word,
             'minimum_stock' => $this->faker->randomNumber(3)
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertSeeText('stock');
@@ -170,7 +170,7 @@ class ProductTest extends TestCase
             'name' => $this->faker->word,
             'price' => $this->faker->randomFloat(2, 0, 99),
             'stock' => $this->faker->randomNumber(3)
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertCreated();
         $this->assertCount(1, Product::all());
@@ -184,7 +184,7 @@ class ProductTest extends TestCase
             'price' => $this->faker->randomFloat(2, 0, 99),
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->word
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertSeeText('minimum_stock');
@@ -200,7 +200,7 @@ class ProductTest extends TestCase
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->randomNumber(3),
             'category_id' => 1,
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertSeeText('category_id');
@@ -218,7 +218,7 @@ class ProductTest extends TestCase
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->randomNumber(3),
             'category_id' => $category->id,
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertCreated();
         $this->assertCount(1, Product::all());
@@ -233,7 +233,7 @@ class ProductTest extends TestCase
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->randomNumber(3),
             'trading_card_game_id' => 1,
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertSeeText('trading_card_game_id');
@@ -251,7 +251,7 @@ class ProductTest extends TestCase
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->randomNumber(3),
             'trading_card_game_id' => $trading_card_game->id,
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertCreated();
         $this->assertCount(1, Product::all());
@@ -266,7 +266,7 @@ class ProductTest extends TestCase
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->randomNumber(3),
             'language_id' => 1,
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertSeeText('language_id');
@@ -284,7 +284,7 @@ class ProductTest extends TestCase
             'stock' => $this->faker->randomNumber(3),
             'minimum_stock' => $this->faker->randomNumber(3),
             'language_id' => $language->id,
-        ], ProductTest::HEADERS);
+        ], ApiHeaders::getAuth());
 
         $response->assertCreated();
         $this->assertCount(1, Product::all());
@@ -302,7 +302,7 @@ class ProductTest extends TestCase
         $expected_name = 'new product';
         $response = $this->put(ProductTest::URL . $product->id,
             ['name' => $expected_name],
-            ProductTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_product = Product::find($product->id);
 
@@ -328,7 +328,7 @@ class ProductTest extends TestCase
         $expected_price = 999.99;
         $response = $this->put(ProductTest::URL . $product->id,
             ['price' => $expected_price],
-            ProductTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_product = Product::find($product->id);
 
@@ -354,7 +354,7 @@ class ProductTest extends TestCase
         $expected_stock = 999;
         $response = $this->put(ProductTest::URL . $product->id,
             ['stock' => $expected_stock],
-            ProductTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_product = Product::find($product->id);
 
@@ -380,7 +380,7 @@ class ProductTest extends TestCase
         $expected_minimum_stock = 999;
         $response = $this->put(ProductTest::URL . $product->id,
             ['minimum_stock' => $expected_minimum_stock],
-            ProductTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_product = Product::find($product->id);
 
@@ -403,7 +403,7 @@ class ProductTest extends TestCase
         $expected_category_id = $categories[0]->id+1;
         $response = $this->put(ProductTest::URL . $product->id,
             ['category_id' => $expected_category_id],
-            ProductTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_product = Product::find($product->id);
 
@@ -426,7 +426,7 @@ class ProductTest extends TestCase
         $expected_trading_card_game_id = $trading_card_games[0]->id+1;
         $response = $this->put(ProductTest::URL . $product->id,
             ['trading_card_game_id' => $expected_trading_card_game_id],
-            ProductTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_product = Product::find($product->id);
 
@@ -449,7 +449,7 @@ class ProductTest extends TestCase
         $expected_language_id = $languages[0]->id+1;
         $response = $this->put(ProductTest::URL . $product->id,
             ['language_id' => $expected_language_id],
-            ProductTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_product = Product::find($product->id);
 
@@ -476,7 +476,7 @@ class ProductTest extends TestCase
         $product_id = $product->id + 1;
         $response = $this->put(ProductTest::URL . $product_id,
             ['name' => 'old product'],
-            ProductTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_product = Product::find($product->id);
         $response->assertNotFound();
@@ -490,7 +490,7 @@ class ProductTest extends TestCase
         $product = Product::factory()->create();
         $response = $this->delete(ProductTest::URL . $product->id,
             [],
-            ProductTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $this->assertNull(Product::find($product->id));
         $response->assertOk();
@@ -503,7 +503,7 @@ class ProductTest extends TestCase
         $product_id = $product->id + 1;
         $response = $this->delete(ProductTest::URL . $product_id,
             [],
-            ProductTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $this->assertNotNull(Product::find($product->id));
         $response->assertNotFound();

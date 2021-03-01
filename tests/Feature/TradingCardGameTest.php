@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Exceptions\Message;
+use App\Helpers\ApiHeaders;
 use App\Models\TradingCardGame;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,7 +14,6 @@ use Tests\TestCase;
 class TradingCardGameTest extends TestCase
 {
     const URL = '/api/tcgames/';
-    const HEADERS = ['Accept' => 'application/json'];
 
     use RefreshDatabase;
     use WithFaker;
@@ -21,7 +21,7 @@ class TradingCardGameTest extends TestCase
     /** @test */
     public function indexHappyPath()
     {
-        $response = $this->get(TradingCardGameTest::URL, TradingCardGameTest::HEADERS);
+        $response = $this->get(TradingCardGameTest::URL, ApiHeaders::getGuest());
         $response->assertOk();
         $response->assertJson(TradingCardGame::all()->toArray());
     }
@@ -30,7 +30,7 @@ class TradingCardGameTest extends TestCase
     public function showHappyPath()
     {
         $trading_card_game = TradingCardGame::factory()->create();
-        $response = $this->get(TradingCardGameTest::URL . $trading_card_game->id, TradingCardGameTest::HEADERS);
+        $response = $this->get(TradingCardGameTest::URL . $trading_card_game->id, ApiHeaders::getGuest());
         $response->assertSimilarJson($trading_card_game->toArray());
         $response->assertOk();
     }
@@ -40,7 +40,7 @@ class TradingCardGameTest extends TestCase
     {
         $trading_card_game = TradingCardGame::factory()->create();
         $wrongId = $trading_card_game->id + 1;
-        $response = $this->get(TradingCardGameTest::URL . $wrongId, TradingCardGameTest::HEADERS);
+        $response = $this->get(TradingCardGameTest::URL . $wrongId, ApiHeaders::getGuest());
         $this->assertEquals(null, $response->getContent());
         $response->assertNoContent();
     }
@@ -50,7 +50,7 @@ class TradingCardGameTest extends TestCase
     {
         $response = $this->post(TradingCardGameTest::URL,
             ['name' => $this->faker->name],
-            TradingCardGameTest::HEADERS
+            ApiHeaders::getAuth()
         );
 
         $response->assertCreated();
@@ -62,7 +62,7 @@ class TradingCardGameTest extends TestCase
     {
         $response = $this->post(TradingCardGameTest::URL,
             ['name' => ''],
-            TradingCardGameTest::HEADERS
+            ApiHeaders::getAuth()
         );
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -79,7 +79,7 @@ class TradingCardGameTest extends TestCase
         $expected_name = 'new trading_card_game';
         $response = $this->put(TradingCardGameTest::URL . $trading_card_game->id,
             ['name' => $expected_name],
-            TradingCardGameTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_trading_card_game = TradingCardGame::find($trading_card_game->id);
 
@@ -97,7 +97,7 @@ class TradingCardGameTest extends TestCase
         $trading_card_game_id = $trading_card_game->id + 1;
         $response = $this->put(TradingCardGameTest::URL . $trading_card_game_id,
             ['name' => $expected_name],
-            TradingCardGameTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_trading_card_game = TradingCardGame::find($trading_card_game->id);
         $response->assertNotFound();
@@ -113,7 +113,7 @@ class TradingCardGameTest extends TestCase
         ]);
         $response = $this->put(TradingCardGameTest::URL . $trading_card_game->id,
             ['name' => ''],
-            TradingCardGameTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_trading_card_game = TradingCardGame::find($trading_card_game->id);
         $this->assertEquals($actual_trading_card_game->toArray(), $trading_card_game->toArray());
@@ -130,7 +130,7 @@ class TradingCardGameTest extends TestCase
         $product->trading_card_game()->associate($trading_card_game)->save();
         $response = $this->delete(TradingCardGameTest::URL . $trading_card_game->id,
             [],
-            TradingCardGameTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $products = Product::where(['trading_card_game_id' => $trading_card_game->id])->get();
 
@@ -146,7 +146,7 @@ class TradingCardGameTest extends TestCase
         $trading_card_game_id = $trading_card_game->id + 1;
         $response = $this->delete(TradingCardGameTest::URL . $trading_card_game_id,
             [],
-            TradingCardGameTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $this->assertNotNull(TradingCardGame::find($trading_card_game->id));
         $response->assertNotFound();

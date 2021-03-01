@@ -40,7 +40,7 @@ class CategoryTest extends TestCase
     {
         $category = Category::factory()->create();
         $wrongId = $category->id + 1;
-        $response = $this->get(CategoryTest::URL . $wrongId, ApiHeaders::getAuth());
+        $response = $this->get(CategoryTest::URL . $wrongId, ApiHeaders::getGuest());
         $this->assertEquals(null, $response->getContent());
         $response->assertNoContent();
     }
@@ -48,10 +48,9 @@ class CategoryTest extends TestCase
     /** @test */
     public function storeCategoryHappyPath()
     {
-        $headers = ApiHeaders::getAuth();
         $response = $this->postJson(CategoryTest::URL,
             ['name' => $this->faker->name],
-            $headers
+            ApiHeaders::getAuth()
         );
 
         $response->assertCreated();

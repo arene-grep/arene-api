@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Exceptions\Message;
+use App\Helpers\ApiHeaders;
 use App\Models\Event;
 use DateInterval;
 use DateTime;
@@ -14,7 +15,6 @@ use Tests\TestCase;
 class EventTest extends TestCase
 {
     const URL = '/api/events/';
-    const HEADERS = ['Accept' => 'application/json'];
 
     use RefreshDatabase;
     use WithFaker;
@@ -22,7 +22,7 @@ class EventTest extends TestCase
     /** @test */
     public function indexHappyPath()
     {
-        $response = $this->get(EventTest::URL, EventTest::HEADERS);
+        $response = $this->get(EventTest::URL, ApiHeaders::getGuest());
         $response->assertOk();
         $response->assertJson(Event::all()->toArray());
     }
@@ -32,7 +32,7 @@ class EventTest extends TestCase
     {
         $event_created = Event::factory()->create();
         $event = Event::find($event_created->id);
-        $response = $this->get(EventTest::URL . $event->id, EventTest::HEADERS);
+        $response = $this->get(EventTest::URL . $event->id, ApiHeaders::getGuest());
         $response->assertSimilarJson($event->toArray());
         $response->assertOk();
     }
@@ -42,7 +42,7 @@ class EventTest extends TestCase
     {
         $Event = Event::factory()->create();
         $wrongId = $Event->id + 1;
-        $response = $this->get(EventTest::URL . $wrongId, EventTest::HEADERS);
+        $response = $this->get(EventTest::URL . $wrongId, ApiHeaders::getGuest());
         $this->assertEquals(null, $response->getContent());
         $response->assertNoContent();
     }
@@ -56,7 +56,7 @@ class EventTest extends TestCase
                 'name' => $this->faker->name,
                 'date' => $this->faker->dateTime(),
             ],
-            EventTest::HEADERS
+            ApiHeaders::getAuth()
         );
 
         $response->assertCreated();
@@ -68,7 +68,7 @@ class EventTest extends TestCase
     {
         $response = $this->post(EventTest::URL,
             ['name' => ''],
-            EventTest::HEADERS
+            ApiHeaders::getAuth()
         );
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -81,7 +81,7 @@ class EventTest extends TestCase
     {
         $response = $this->post(EventTest::URL,
             ['name' => $this->faker->name],
-            EventTest::HEADERS
+            ApiHeaders::getAuth()
         );
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -99,7 +99,7 @@ class EventTest extends TestCase
         $expected_name = 'new Event';
         $response = $this->put(EventTest::URL . $Event->id,
             ['name' => $expected_name],
-            EventTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_Event = Event::find($Event->id);
 
@@ -120,7 +120,7 @@ class EventTest extends TestCase
         $expected_date = $oldDate->add(new DateInterval('P1D'));
         $response = $this->put(EventTest::URL . $event->id,
             ['date' => $expected_date],
-            EventTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_event = Event::find($event->id);
 
@@ -139,7 +139,7 @@ class EventTest extends TestCase
         $Event_id = $Event->id + 1;
         $response = $this->put(EventTest::URL . $Event_id,
             ['name' => $expected_name],
-            EventTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $actual_Event = Event::find($Event->id);
         $response->assertNotFound();
@@ -153,7 +153,7 @@ class EventTest extends TestCase
         $event = Event::factory()->create();
         $response = $this->delete(EventTest::URL . $event->id,
             [],
-            EventTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $this->assertNull(Event::find($event->id));
         $response->assertOk();
@@ -166,7 +166,7 @@ class EventTest extends TestCase
         $event_id = $event->id + 1;
         $response = $this->delete(EventTest::URL . $event_id,
             [],
-            EventTest::HEADERS
+            ApiHeaders::getAuth()
         );
         $this->assertNotNull(Event::find($event->id));
         $response->assertNotFound();
