@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Exceptions\Message;
 use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use Illuminate\Http\Response;
 use Exception;
@@ -57,7 +58,7 @@ class OrderController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(StoreOrderRequest $request, int $id): Response
+    public function update(UpdateOrderRequest $request, int $id): Response
     {
         try {
             $order = Order::findOrFail($id);
