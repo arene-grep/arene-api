@@ -9,15 +9,11 @@ use Mehradsadeghi\FilterQueryString\FilterQueryString;
 
 /**
  * @mixin IdeHelperProduct
- * @method static filter()
  */
 class Product extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
     use FilterQueryString;
-
-    protected $filters = ['name', 'price', 'category_id', 'trading_card_game_id', 'language_id'];
 
     protected $fillable = [
         'name',
@@ -39,6 +35,20 @@ class Product extends Model
         'created_at',
         'updated_at',
         'deleted_at'
+    ];
+
+    protected $filters = [
+        'name',
+        'price',
+        'category_id',
+        'trading_card_game_id',
+        'language_id',
+        'greater',
+        'greater_or_equal',
+        'less',
+        'less_or_equal',
+        'between',
+        'not_between'
     ];
 
     public function category()

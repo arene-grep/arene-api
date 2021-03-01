@@ -32,7 +32,7 @@ class UserController extends Controller
         if (!Auth::attempt($credentials))
             return response(Message::FAILED_LOGIN, Response::HTTP_UNAUTHORIZED);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::whereEmail($request->email)->first();
 
         $tokenResult = $user->createToken('authToken')->plainTextToken;
 

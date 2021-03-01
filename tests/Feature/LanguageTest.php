@@ -132,7 +132,7 @@ class LanguageTest extends TestCase
             [],
             ApiHeaders::getAuth()
         );
-        $products = Product::where(['language_id' => $language->id])->get();
+        $products = Product::whereLanguageId($language->id)->get();
 
         $this->assertEmpty($products->toArray());
         $this->assertNull(Language::find($language->id));

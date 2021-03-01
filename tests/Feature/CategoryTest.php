@@ -132,7 +132,7 @@ class CategoryTest extends TestCase
             [],
             ApiHeaders::getAuth()
         );
-        $products = Product::where(['category_id' => $category->id])->get();
+        $products = Product::whereCategoryId($category->id)->get();
 
         $this->assertEmpty($products->toArray());
         $this->assertNull(Category::find($category->id));

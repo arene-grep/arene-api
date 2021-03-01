@@ -132,7 +132,7 @@ class TradingCardGameTest extends TestCase
             [],
             ApiHeaders::getAuth()
         );
-        $products = Product::where(['trading_card_game_id' => $trading_card_game->id])->get();
+        $products = Product::whereTradingCardGameId($trading_card_game->id)->get();
 
         $this->assertEmpty($products->toArray());
         $this->assertNull(TradingCardGame::find($trading_card_game->id));
