@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Exceptions\Message;
 use App\Helpers\ApiHeaders;
+use App\Models\Buy;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
 use DateInterval;
 use DateTime;
@@ -62,17 +64,34 @@ class OrderTest extends TestCase
     /** @test */
     public function storeOrderHappyPath()
     {
+        $products = Product::factory()->count(3)->create();
         $user = User::factory()->create();
+
         $response = $this->post(OrderTest::URL,
             [
                 'date' => $this->faker->dateTime,
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'buys' => [
+                        [
+                            'product_id' => $products[0]->id,
+                            'quantity' => $this->faker->randomNumber(3)
+                        ],
+                        [
+                            'product_id' => $products[1]->id,
+                            'quantity' => $this->faker->randomNumber(3)
+                        ],
+                        [
+                            'product_id' => $products[2]->id,
+                            'quantity' => $this->faker->randomNumber(3)
+                        ],
+                ]
             ],
             ApiHeaders::getAuth()
         );
 
         $response->assertCreated();
         $this->assertCount(1, Order::all());
+        $this->assertCount(3, Buy::all());
     }
 
     /** @test */

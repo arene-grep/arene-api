@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Exceptions\Message;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Models\Buy;
 use App\Models\Order;
 use Illuminate\Http\Response;
 use Exception;
@@ -32,6 +33,14 @@ class OrderController extends Controller
     {
         $order = new Order();
         $order->fill($request->validated())->save();
+        if ($request->input('buys')) {
+            $buys = $request->input('buys');
+            foreach ($buys as $buyAttributs) {
+                $buyAttributs['order_id'] = $order->id;
+                $buy = new Buy;
+                $buy->fill($buyAttributs)->save();
+            }
+        }
         return response($order, Response::HTTP_CREATED);
     }
 
