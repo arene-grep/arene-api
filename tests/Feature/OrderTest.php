@@ -76,7 +76,7 @@ class OrderTest extends TestCase
     }
 
     /** @test */
-    public function storeOrderWithNoDate()
+    public function storeOrderWithoutDate()
     {
         $user = User::factory()->create();
         $response = $this->post(OrderTest::URL,
@@ -86,9 +86,8 @@ class OrderTest extends TestCase
             ApiHeaders::getAuth()
         );
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $response->assertSeeText('date');
-        $this->assertEmpty(Order::all());
+        $response->assertCreated();
+        $this->assertCount(1, Order::all());
     }
 
     /** @test */
