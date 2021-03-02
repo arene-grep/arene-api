@@ -15,7 +15,7 @@ class CreateOrderTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->datetime('date');
+            $table->datetime('date')->default(date('Y-m-d H:i:s'));
             $table->softDeletes();
             $table->timestamps();
         });
