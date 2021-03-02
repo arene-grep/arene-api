@@ -65,25 +65,23 @@ class OrderTest extends TestCase
     public function storeOrderHappyPath()
     {
         $products = Product::factory()->count(3)->create();
-        $user = User::factory()->create();
 
         $response = $this->post(OrderTest::URL,
             [
                 'date' => $this->faker->dateTime,
-                'user_id' => $user->id,
                 'buys' => [
-                        [
-                            'product_id' => $products[0]->id,
-                            'quantity' => $this->faker->randomNumber(3)
-                        ],
-                        [
-                            'product_id' => $products[1]->id,
-                            'quantity' => $this->faker->randomNumber(3)
-                        ],
-                        [
-                            'product_id' => $products[2]->id,
-                            'quantity' => $this->faker->randomNumber(3)
-                        ],
+                    [
+                        'product_id' => $products[0]->id,
+                        'quantity' => $this->faker->randomNumber(3)
+                    ],
+                    [
+                        'product_id' => $products[1]->id,
+                        'quantity' => $this->faker->randomNumber(3)
+                    ],
+                    [
+                        'product_id' => $products[2]->id,
+                        'quantity' => $this->faker->randomNumber(3)
+                    ],
                 ]
             ],
             ApiHeaders::getAuth()

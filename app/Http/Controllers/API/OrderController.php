@@ -4,10 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Exceptions\Message;
-use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Buy;
 use App\Models\Order;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Exception;
 
@@ -26,13 +26,15 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreOrderRequest $request
+     * @param Request $request
      * @return Response
      */
-    public function store(StoreOrderRequest $request): Response
+    public function store(Request $request): Response
     {
         $order = new Order();
-        $order->fill($request->validated())->save();
+        $order->user_id = $request->user()->id;
+        $order->save();
+
         if ($request->input('buys')) {
             $buys = $request->input('buys');
 
@@ -63,10 +65,11 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param StoreOrderRequest $request
+     * @param UpdateOrderRequest $request
      * @param int $id
      * @return Response
      */
+    //TODO check later if I should completely remove this function and its route
     public function update(UpdateOrderRequest $request, int $id): Response
     {
         try {
