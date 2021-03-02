@@ -91,6 +91,13 @@ class OrderTest extends TestCase
 
         $response->assertCreated();
         $this->assertCount(1, Order::all());
+
+        $buys = Buy::all();
+        foreach($buys as $buy){
+            print_r('$buy->order_id '.$buy->order_id);
+            print_r('$buy->product_id '.$buy->product_id);
+            print_r('$buy->quantity '.$buy->quantity.'\n');
+        }
         $this->assertCount(3, Buy::all());
     }
 

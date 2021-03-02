@@ -35,11 +35,11 @@ class OrderController extends Controller
         $order->fill($request->validated())->save();
         if ($request->input('buys')) {
             $buys = $request->input('buys');
-            foreach ($buys as $buyAttributs) {
-                $buyAttributs['order_id'] = $order->id;
-                $buy = new Buy;
-                $buy->fill($buyAttributs)->save();
-            }
+
+            foreach($buys as $buy)
+                $buy['order_id'] = $order->id;
+
+            Buy::insert($buys);
         }
         return response($order, Response::HTTP_CREATED);
     }
